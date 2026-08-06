@@ -1,6 +1,8 @@
 package com.dreammaster.scripts;
 
 import static com.dreammaster.scripts.IngredientFactory.getModItem;
+import static gregtech.api.enums.Mods.AE2FluidCraft;
+import static gregtech.api.enums.Mods.AppliedEnergistics2;
 import static gregtech.api.enums.Mods.HardcoreEnderExpansion;
 import static gregtech.api.enums.Mods.IndustrialCraft2;
 import static gregtech.api.enums.Mods.OpenComputers;
@@ -32,14 +34,35 @@ public class ScriptOpenComputers implements IScriptLoader {
 
     @Override
     public List<String> getDependencies() {
-        return Arrays.asList(HardcoreEnderExpansion.ID, IndustrialCraft2.ID, OpenComputers.ID);
+        return Arrays.asList(
+                AE2FluidCraft.ID,
+                AppliedEnergistics2.ID,
+                HardcoreEnderExpansion.ID,
+                IndustrialCraft2.ID,
+                OpenComputers.ID);
+    }
+
+    private static ItemStack getRateTaggedItem(String name, int aAmount, int rate) {
+        ItemStack stack = getModItem(OpenComputers.ID, name, aAmount, 0);
+        stack.setTagCompound(new NBTTagCompound());
+        stack.getTagCompound().setInteger("oc:fluidTransferRate", rate);
+        return stack;
     }
 
     private static ItemStack getTransposer(int aAmount, int rate) {
-        ItemStack transposer = getModItem(OpenComputers.ID, "transposer", aAmount, 0);
-        transposer.setTagCompound(new NBTTagCompound());
-        transposer.getTagCompound().setInteger("oc:fluidTransferRate", rate);
-        return transposer;
+        return getRateTaggedItem("transposer", aAmount, rate);
+    }
+
+    private static ItemStack getMETransposer(int aAmount, int rate) {
+        return getRateTaggedItem("meTransposer", aAmount, rate);
+    }
+
+    private static ItemStack getMEActuator(int aAmount, int rate) {
+        return getRateTaggedItem("meActuator", aAmount, rate);
+    }
+
+    private static ItemStack getAdapter(int aAmount) {
+        return getModItem(OpenComputers.ID, "adapter", aAmount, 0);
     }
 
     @Override
@@ -100,6 +123,116 @@ public class ScriptOpenComputers implements IScriptLoader {
 
         GTValues.RA.stdBuilder().itemInputs(getTransposer(1, 2_560), ItemList.FluidRegulator_UXV.get(1L))
                 .itemOutputs(getTransposer(1, 335_544_320))
+                .fluidInputs(MaterialMisc.MUTATED_LIVING_SOLDER.getFluidStack(72)).duration(20 * SECONDS)
+                .eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        // ME Transposers
+        // Base assembly recipe intentionally omitted here: the base tier is crafted via OC's own
+        // (gregified) crafting-table recipe, not a GT Assembler recipe. Only tier upgrades below.
+        GTValues.RA.stdBuilder().itemInputs(getMETransposer(1, 2_560), ItemList.FluidRegulator_HV.get(1L))
+                .itemOutputs(getMETransposer(1, 10_240)).fluidInputs(Materials.SolderingAlloy.getMolten(72L))
+                .duration(20 * SECONDS).eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMETransposer(1, 2_560), ItemList.FluidRegulator_EV.get(1L))
+                .itemOutputs(getMETransposer(1, 40_960)).fluidInputs(Materials.SolderingAlloy.getMolten(72L))
+                .duration(20 * SECONDS).eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMETransposer(1, 2_560), ItemList.FluidRegulator_IV.get(1L))
+                .itemOutputs(getMETransposer(1, 163_840)).fluidInputs(Materials.SolderingAlloy.getMolten(72L))
+                .duration(20 * SECONDS).eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMETransposer(1, 2_560), ItemList.FluidRegulator_LuV.get(1L))
+                .itemOutputs(getMETransposer(1, 655_360)).fluidInputs(MaterialsAlloy.INDALLOY_140.getFluidStack(72))
+                .duration(20 * SECONDS).eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMETransposer(1, 2_560), ItemList.FluidRegulator_ZPM.get(1L))
+                .itemOutputs(getMETransposer(1, 2_621_440))
+                .fluidInputs(MaterialsAlloy.INDALLOY_140.getFluidStack(72)).duration(20 * SECONDS).eut(TierEU.RECIPE_MV)
+                .addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMETransposer(1, 2_560), ItemList.FluidRegulator_UV.get(1L))
+                .itemOutputs(getMETransposer(1, 10_485_760))
+                .fluidInputs(MaterialsAlloy.INDALLOY_140.getFluidStack(72)).duration(20 * SECONDS).eut(TierEU.RECIPE_MV)
+                .addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMETransposer(1, 2_560), ItemList.FluidRegulator_UHV.get(1L))
+                .itemOutputs(getMETransposer(1, 20_971_520))
+                .fluidInputs(MaterialsAlloy.INDALLOY_140.getFluidStack(72)).duration(20 * SECONDS).eut(TierEU.RECIPE_MV)
+                .addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMETransposer(1, 2_560), ItemList.FluidRegulator_UEV.get(1L))
+                .itemOutputs(getMETransposer(1, 41_943_040))
+                .fluidInputs(MaterialMisc.MUTATED_LIVING_SOLDER.getFluidStack(72)).duration(20 * SECONDS)
+                .eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMETransposer(1, 2_560), ItemList.FluidRegulator_UIV.get(1L))
+                .itemOutputs(getMETransposer(1, 83_886_080))
+                .fluidInputs(MaterialMisc.MUTATED_LIVING_SOLDER.getFluidStack(72)).duration(20 * SECONDS)
+                .eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMETransposer(1, 2_560), ItemList.FluidRegulator_UMV.get(1L))
+                .itemOutputs(getMETransposer(1, 167_772_160))
+                .fluidInputs(MaterialMisc.MUTATED_LIVING_SOLDER.getFluidStack(72)).duration(20 * SECONDS)
+                .eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMETransposer(1, 2_560), ItemList.FluidRegulator_UXV.get(1L))
+                .itemOutputs(getMETransposer(1, 335_544_320))
+                .fluidInputs(MaterialMisc.MUTATED_LIVING_SOLDER.getFluidStack(72)).duration(20 * SECONDS)
+                .eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        // ME Actuators
+        // Base assembly recipe. NOTE: EU/duration/tier are a first-pass placeholder, not balanced.
+        GTValues.RA.stdBuilder().itemInputs(getMETransposer(1, 2_560), getAdapter(1))
+                .itemOutputs(getMEActuator(1, 2_560)).duration(5 * SECONDS).eut(TierEU.RECIPE_LV)
+                .addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMEActuator(1, 2_560), ItemList.FluidRegulator_HV.get(1L))
+                .itemOutputs(getMEActuator(1, 10_240)).fluidInputs(Materials.SolderingAlloy.getMolten(72L))
+                .duration(20 * SECONDS).eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMEActuator(1, 2_560), ItemList.FluidRegulator_EV.get(1L))
+                .itemOutputs(getMEActuator(1, 40_960)).fluidInputs(Materials.SolderingAlloy.getMolten(72L))
+                .duration(20 * SECONDS).eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMEActuator(1, 2_560), ItemList.FluidRegulator_IV.get(1L))
+                .itemOutputs(getMEActuator(1, 163_840)).fluidInputs(Materials.SolderingAlloy.getMolten(72L))
+                .duration(20 * SECONDS).eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMEActuator(1, 2_560), ItemList.FluidRegulator_LuV.get(1L))
+                .itemOutputs(getMEActuator(1, 655_360)).fluidInputs(MaterialsAlloy.INDALLOY_140.getFluidStack(72))
+                .duration(20 * SECONDS).eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMEActuator(1, 2_560), ItemList.FluidRegulator_ZPM.get(1L))
+                .itemOutputs(getMEActuator(1, 2_621_440)).fluidInputs(MaterialsAlloy.INDALLOY_140.getFluidStack(72))
+                .duration(20 * SECONDS).eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMEActuator(1, 2_560), ItemList.FluidRegulator_UV.get(1L))
+                .itemOutputs(getMEActuator(1, 10_485_760))
+                .fluidInputs(MaterialsAlloy.INDALLOY_140.getFluidStack(72)).duration(20 * SECONDS).eut(TierEU.RECIPE_MV)
+                .addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMEActuator(1, 2_560), ItemList.FluidRegulator_UHV.get(1L))
+                .itemOutputs(getMEActuator(1, 20_971_520))
+                .fluidInputs(MaterialsAlloy.INDALLOY_140.getFluidStack(72)).duration(20 * SECONDS).eut(TierEU.RECIPE_MV)
+                .addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMEActuator(1, 2_560), ItemList.FluidRegulator_UEV.get(1L))
+                .itemOutputs(getMEActuator(1, 41_943_040))
+                .fluidInputs(MaterialMisc.MUTATED_LIVING_SOLDER.getFluidStack(72)).duration(20 * SECONDS)
+                .eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMEActuator(1, 2_560), ItemList.FluidRegulator_UIV.get(1L))
+                .itemOutputs(getMEActuator(1, 83_886_080))
+                .fluidInputs(MaterialMisc.MUTATED_LIVING_SOLDER.getFluidStack(72)).duration(20 * SECONDS)
+                .eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMEActuator(1, 2_560), ItemList.FluidRegulator_UMV.get(1L))
+                .itemOutputs(getMEActuator(1, 167_772_160))
+                .fluidInputs(MaterialMisc.MUTATED_LIVING_SOLDER.getFluidStack(72)).duration(20 * SECONDS)
+                .eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder().itemInputs(getMEActuator(1, 2_560), ItemList.FluidRegulator_UXV.get(1L))
+                .itemOutputs(getMEActuator(1, 335_544_320))
                 .fluidInputs(MaterialMisc.MUTATED_LIVING_SOLDER.getFluidStack(72)).duration(20 * SECONDS)
                 .eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
 
