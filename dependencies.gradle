@@ -9,6 +9,7 @@ dependencies {
 
     implementation("net.glease:tc4recipelib:1.5.37:dev")
 
+    compileOnly("com.github.GTNewHorizons:OpenComputers:1.12.49-GTNH:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:AkashicTome:1.2.7:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:Avaritia:1.97:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:Irontanks:1.4.7:dev") { transitive = false }
