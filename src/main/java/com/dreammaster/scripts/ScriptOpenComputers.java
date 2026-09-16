@@ -5,7 +5,6 @@ import static gregtech.api.enums.Mods.AE2FluidCraft;
 import static gregtech.api.enums.Mods.AppliedEnergistics2;
 import static gregtech.api.enums.Mods.HardcoreEnderExpansion;
 import static gregtech.api.enums.Mods.IndustrialCraft2;
-import static gregtech.api.enums.Mods.MatterManipulator;
 import static gregtech.api.enums.Mods.OpenComputers;
 import static gregtech.api.recipe.RecipeMaps.assemblerRecipes;
 import static gregtech.api.util.GTRecipeBuilder.SECONDS;
@@ -41,7 +40,6 @@ public class ScriptOpenComputers implements IScriptLoader {
                 AppliedEnergistics2.ID,
                 HardcoreEnderExpansion.ID,
                 IndustrialCraft2.ID,
-                MatterManipulator.ID,
                 OpenComputers.ID);
     }
 
@@ -66,10 +64,6 @@ public class ScriptOpenComputers implements IScriptLoader {
 
     private static ItemStack getLanCard(int aAmount) {
         return Items.get("lanCard").createItemStack(aAmount);
-    }
-
-    private static ItemStack getComputerCore(int aAmount) {
-        return getModItem(MatterManipulator.ID, "metaitem", aAmount, 2);
     }
 
     private static ItemStack getAEPart(int aAmount, int subID) {
@@ -162,14 +156,8 @@ public class ScriptOpenComputers implements IScriptLoader {
                 .eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
 
         GTValues.RA.stdBuilder()
-                .itemInputs(
-                        getGeolyzer(1),
-                        getStorageBus(1),
-                        getImportBus(1),
-                        getExportBus(1),
-                        getLanCard(1),
-                        getComputerCore(1))
-                .itemOutputs(getActuator(3)).fluidInputs(Materials.Polyethylene.getMolten(144L)).duration(30 * SECONDS)
+                .itemInputs(getGeolyzer(1), getStorageBus(1), getImportBus(1), getExportBus(1), getLanCard(1))
+                .itemOutputs(getActuator(4)).fluidInputs(Materials.Polyethylene.getMolten(144L)).duration(30 * SECONDS)
                 .eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
 
         GTValues.RA.stdBuilder()
@@ -179,16 +167,15 @@ public class ScriptOpenComputers implements IScriptLoader {
                         getImportBus(1),
                         getExportBus(1),
                         getLanCard(1),
-                        getComputerCore(1),
                         getFluidStorageBus(1),
                         getFluidImportBus(1),
                         getFluidExportBus(1))
-                .itemOutputs(getDualActuator(3)).fluidInputs(Materials.Polyethylene.getMolten(144L))
+                .itemOutputs(getDualActuator(4)).fluidInputs(Materials.Polyethylene.getMolten(144L))
                 .duration(30 * SECONDS).eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
 
         GTValues.RA.stdBuilder()
-                .itemInputs(getActuator(3), getFluidStorageBus(1), getFluidImportBus(1), getFluidExportBus(1))
-                .itemOutputs(getDualActuator(3)).fluidInputs(Materials.Polyethylene.getMolten(144L))
+                .itemInputs(getActuator(4), getFluidStorageBus(1), getFluidImportBus(1), getFluidExportBus(1))
+                .itemOutputs(getDualActuator(4)).fluidInputs(Materials.Polyethylene.getMolten(144L))
                 .duration(30 * SECONDS).eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
 
         addShapelessRecipe(getModItem(OpenComputers.ID, "item", 1, 23), ItemList.Circuit_Parts_Transistor.get(1));
