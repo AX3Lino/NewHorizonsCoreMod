@@ -24,7 +24,9 @@ import gregtech.api.enums.TierEU;
 import gregtech.api.util.GTOreDictUnificator;
 import gtPlusPlus.core.material.MaterialMisc;
 import gtPlusPlus.core.material.MaterialsAlloy;
+import gtPlusPlus.xmod.gregtech.api.enums.GregtechItemList;
 import li.cil.oc.api.Items;
+import tectech.thing.item.ItemParametrizerMemoryCard;
 
 public class ScriptOpenComputers implements IScriptLoader {
 
@@ -177,6 +179,19 @@ public class ScriptOpenComputers implements IScriptLoader {
                 .itemInputs(getActuator(4), getFluidStorageBus(1), getFluidImportBus(1), getFluidExportBus(1))
                 .itemOutputs(getDualActuator(4)).fluidInputs(Materials.Polyethylene.getMolten(144L))
                 .duration(30 * SECONDS).eut(TierEU.RECIPE_MV).addTo(assemblerRecipes);
+
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        Items.get("nanomachines").createItemStack(1),
+                        GregtechItemList.Gregtech_Computer_Cube.get(1),
+                        getGeolyzer(1),
+                        ItemList.NC_SensorKit.get(1),
+                        new ItemStack(ItemParametrizerMemoryCard.INSTANCE),
+                        ItemList.Tool_DataStick.get(1),
+                        getModItem(AppliedEnergistics2.ID, "item.ItemBiometricCard", 1))
+                .itemOutputs(getModItem(OpenComputers.ID, "vinculum", 1, 0))
+                .fluidInputs(Materials.SolderingAlloy.getMolten(144L)).duration(30 * SECONDS).eut(TierEU.RECIPE_IV)
+                .addTo(assemblerRecipes);
 
         addShapelessRecipe(getModItem(OpenComputers.ID, "item", 1, 23), ItemList.Circuit_Parts_Transistor.get(1));
         addShapelessRecipe(ItemList.Circuit_Parts_Transistor.get(1), getModItem(OpenComputers.ID, "item", 1, 23));
